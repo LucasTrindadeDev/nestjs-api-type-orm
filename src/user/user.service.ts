@@ -34,7 +34,7 @@ export class UserService {
 
   async update(
     id: number,
-    { email, name, password, birthday }: UpdatePutUserDTO,
+    { email, name, password, birthday, role }: UpdatePutUserDTO,
   ) {
     await this.exists(id);
 
@@ -44,6 +44,7 @@ export class UserService {
         name,
         password,
         birthday: birthday ? new Date(birthday) : null,
+        role,
       },
       where: {
         id,
@@ -53,7 +54,7 @@ export class UserService {
 
   async updatePartial(
     id: number,
-    { email, name, password, birthday }: UpdatePatchUserDTO,
+    { email, name, password, birthday, role }: UpdatePatchUserDTO,
   ) {
     await this.exists(id);
 
@@ -63,6 +64,7 @@ export class UserService {
     if (name) data.name = name;
     if (password) data.password = password;
     if (birthday) data.birthday = birthday;
+    if (role) data.role = role;
 
     return this.prisma.user.update({
       data,
