@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserEntity } from './user/entity/user.entity';
 
 @Module({
   imports: [
@@ -18,6 +20,16 @@ import { ConfigModule } from '@nestjs/config';
     ]),
     forwardRef(() => UserModule),
     forwardRef(() => AuthModule),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      entities: [UserEntity],
+      synchronize: process.env.ENVIRONMENT === 'development',
+    }),
   ],
   controllers: [AppController],
   providers: [
